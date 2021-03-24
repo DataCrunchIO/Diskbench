@@ -20,8 +20,8 @@ echo "==============================="
 
 
 fio --loops=5 --size=1000m --filename=$TARGET/fiotest.tmp --stonewall --ioengine=libaio --direct=1 \
-  --name=Seqread --bs=32m --rw=read \
-  --name=Seqwrite --bs=32m --rw=write \
+  --name=Seqread --bs=32m --iodepth=8 --rw=read \
+  --name=Seqwrite --bs=32m --iodepth=8 --rw=write \
   --name=4kQD32read --bs=4k --iodepth=32 --rw=randread \
   --name=4kQD32write --bs=4k --iodepth=32 --rw=randwrite
 rm -f $TARGET/fiotest.tmp
