@@ -19,7 +19,7 @@ echo $TARGET"/fiotest.tmp"
 echo "==============================="
 
 
-fio --loops=5 --size=100m --filename=$TARGET/fiotest.tmp --stonewall --ioengine=libaio --direct=1 \
+fio --loops=5 --size=1000m --filename=$TARGET/fiotest.tmp --stonewall --ioengine=libaio --direct=1 \
   --name=Seqread --bs=32m --rw=read \
   --name=Seqwrite --bs=32m --rw=write \
   --name=4kQD32read --bs=4k --iodepth=32 --rw=randread \
