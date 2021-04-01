@@ -53,20 +53,20 @@ fio --loops=$LOOPS --size=$SIZE4k --filename="$TARGET/fiomark-4k.tmp" --stonewal
   --name=4kQ1T1write --bs=4k --iodepth=1 --numjobs=1 --rw=randwrite \
   --name=4kQ32T1read --bs=4k --iodepth=32 --numjobs=1 --rw=randread \
   --name=4kQ32T1write --bs=4k --iodepth=32 --numjobs=1 --rw=randwrite \
-  --name=4kQ32T16read --bs=4k --iodepth=32 --numjobs=16 --rw=randread \
-  --name=4kQ32T16write --bs=4k --iodepth=32 --numjobs=16 --rw=randwrite \
+  --name=4kQ8T8read --bs=4k --iodepth=8 --numjobs=8 --rw=randread \
+  --name=4kQ8T8write --bs=4k --iodepth=8 --numjobs=8 --rw=randwrite \
   > "$TARGET/fiomark-4k.txt"
 
 FKR="$(($(cat "$TARGET/fiomark-4k.txt" | grep -A15 '"name" : "4kQ1T1read"' | grep bw | grep -v '_' | cut -d: -f2 | sed s:,::g)/1000))MB/s [   $(cat "$TARGET/fiomark-4k.txt" | grep -A15 '"name" : "4kQ1T1read"' | grep -m1 iops | cut -d: -f2 | cut -d. -f1 | sed 's: ::g') IOPS]"
 FKW="$(($(cat "$TARGET/fiomark-4k.txt" | grep -A80 '"name" : "4kQ1T1write"' | grep bw | grep -v '_' | sed 2\!d | cut -d: -f2 | sed s:,::g)/1000))MB/s [   $(cat "$TARGET/fiomark-4k.txt" | grep -A80 '"name" : "4kQ1T1write"' | grep iops | sed '7!d' | cut -d: -f2 | cut -d. -f1 | sed 's: ::g') IOPS]"
 FK32R="$(($(cat "$TARGET/fiomark-4k.txt" | grep -A15 '"name" : "4kQ32T1read"' | grep bw | grep -v '_' | cut -d: -f2 | sed s:,::g)/1000))MB/s [   $(cat "$TARGET/fiomark-4k.txt" | grep -A15 '"name" : "4kQ32T1read"' | grep -m1 iops | cut -d: -f2 | cut -d. -f1 | sed 's: ::g') IOPS]"
 FK32W="$(($(cat "$TARGET/fiomark-4k.txt" | grep -A80 '"name" : "4kQ32T1write"' | grep bw | grep -v '_' | sed 2\!d | cut -d: -f2 | sed s:,::g)/1000))MB/s [   $(cat "$TARGET/fiomark-4k.txt" | grep -A80 '"name" : "4kQ32T1write"' | grep iops | sed '7!d' | cut -d: -f2 | cut -d. -f1 | sed 's: ::g') IOPS]"
-FK8R="$(($(cat "$TARGET/fiomark-4k.txt" | grep -A15 '"name" : "4kQ32T16read"' | grep bw | grep -v '_' | sed 's/        "bw" : //g' | sed 's:,::g' | awk '{ SUM += $1} END { print SUM }')/1000))MB/s [   $(cat "$TARGET/fiomark-4k.txt" | grep -A15 '"name" : "4kQ32T16read"' | grep iops | sed 's/        "iops" : //g' | sed 's:,::g' | awk '{ SUM += $1} END { print SUM }' | cut -d. -f1) IOPS]"
-FK8W="$(($(cat "$TARGET/fiomark-4k.txt" | grep -A80 '"name" : "4kQ32T16write"' | grep bw | sed 's/        "bw" : //g' | sed 's:,::g' | awk '{ SUM += $1} END { print SUM }')/1000))MB/s [   $(cat "$TARGET/fiomark-4k.txt" | grep -A80 '"name" : "4kQ32T16write"' | grep '"iops" '| sed 's/        "iops" : //g' | sed 's:,::g' | awk '{ SUM += $1} END { print SUM }' | cut -d. -f1) IOPS]"
+FK8R="$(($(cat "$TARGET/fiomark-4k.txt" | grep -A15 '"name" : "4kQ8T8read"' | grep bw | grep -v '_' | sed 's/        "bw" : //g' | sed 's:,::g' | awk '{ SUM += $1} END { print SUM }')/1000))MB/s [   $(cat "$TARGET/fiomark-4k.txt" | grep -A15 '"name" : "4kQ8T8read"' | grep iops | sed 's/        "iops" : //g' | sed 's:,::g' | awk '{ SUM += $1} END { print SUM }' | cut -d. -f1) IOPS]"
+FK8W="$(($(cat "$TARGET/fiomark-4k.txt" | grep -A80 '"name" : "4kQ8T8write"' | grep bw | sed 's/        "bw" : //g' | sed 's:,::g' | awk '{ SUM += $1} END { print SUM }')/1000))MB/s [   $(cat "$TARGET/fiomark-4k.txt" | grep -A80 '"name" : "4kQ8T8write"' | grep '"iops" '| sed 's/        "iops" : //g' | sed 's:,::g' | awk '{ SUM += $1} END { print SUM }' | cut -d. -f1) IOPS]"
 
 echo -e "\033[1;35m
-4KB Q32T16 Read: $FK8R
-4KB Q32T16 Write: $FK8W
+4KB Q8T8 Read: $FK8R
+4KB Q8T8 Write: $FK8W
 \033[1;33m
 4KB Q32T1 Read: $FK32R
 4KB Q32T1 Write: $FK32W
@@ -90,8 +90,8 @@ else
 
    Sequential Read (Q= 32,T= 1)  :   $SEQ32R
   Sequential Write (Q= 32,T= 1)  :   $SEQ32W
-  Random Read 4KiB (Q= 32,T= 16) :   $FK8R
- Random Write 4KiB (Q= 32,T= 16) :   $FK8W
+  Random Read 4KiB (Q=  8,T= 8)  :   $FK8R
+ Random Write 4KiB (Q=  8,T= 8)  :   $FK8W
   Random Read 4KiB (Q= 32,T= 1)  :   $FK32R
  Random Write 4KiB (Q= 32,T= 1)  :   $FK32W
   Random Read 4KiB (Q=  1,T= 1)  :   $FKR
